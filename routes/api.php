@@ -35,6 +35,8 @@ Route::group([
     Route::post('/', [PersonController::class, 'store']);
     Route::post('/associate-person', [PersonController::class, 'associatePerson']);
     Route::get('/{id}', [PersonController::class, 'showByID']);
+    Route::put('/{id}', [PersonController::class, 'update']);
+
 });
 
 

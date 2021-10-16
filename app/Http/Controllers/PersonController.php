@@ -7,14 +7,12 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Person;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 
 class PersonController extends Controller {
     public function __construct() {
-//        $this->middleware('check.jwt');
-        $this->middleware('check.jwt');
+        // $this->middleware('check.jwt');
     }
 
     /**
@@ -65,6 +63,10 @@ class PersonController extends Controller {
         $validator = Validator::make($request->all(), [
             'person_id' => 'required|integer',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
         $person = Person::where('id', $validator->validated()["person_id"])->update(['user_id' => $user->id]);
 
         if ($person === 0) {
@@ -96,7 +98,6 @@ class PersonController extends Controller {
         }
 
         return response()->json([
-            'message' => 'Person successfully associated',
             'person' => Person::where('id', $id)->first()
         ]);
     }
@@ -110,11 +111,16 @@ class PersonController extends Controller {
      * @return JsonResponse
      */
     public function update(Request $request, int $id): JsonResponse {
-        $updateData = $request->validate([
-            'phone' => 'required|numeric',
-            'address' => 'required|max:255',
+        $validator = Validator::make($request->all(), [
+            'phone' => 'sometimes|required|numeric',
+            'address' => 'sometimes|required|max:255',
         ]);
-        Person::whereId($id)->update($updateData);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        Person::whereId($id)->update($validator->validated());
 
         return response()->json([
             'message' => 'Person successfully updated',
