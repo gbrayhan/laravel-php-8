@@ -1,0 +1,138 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use App\Models\Person;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Validator;
+
+
+class PersonController extends Controller {
+    public function __construct() {
+//        $this->middleware('check.jwt');
+        $this->middleware('check.jwt');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Collection|Person[]
+     */
+    public function showAll(): Collection|array {
+        return Person::all();
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function store(Request $request): JsonResponse {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'last_name' => 'required|max:255',
+            'phone' => 'required|numeric',
+            'curp' => 'required|max:255',
+            'address' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        $person = Person::create($validator->validated());
+
+        return response()->json([
+            'message' => 'Person creada exitosamente',
+            'persona' => $person
+        ], 201);
+    }
+
+
+    /**
+     * Refresh a token.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function associatePerson(Request $request): JsonResponse {
+        $user = auth()->user();
+        $validator = Validator::make($request->all(), [
+            'person_id' => 'required|integer',
+        ]);
+        $person = Person::where('id', $validator->validated()["person_id"])->update(['user_id' => $user->id]);
+
+        if ($person === 0) {
+            return response()->json([
+                'message' => 'Person not associated, please check your ID',
+            ], 400);
+        }
+
+
+        return response()->json([
+            'message' => 'Person successfully associated',
+            'person' => Person::find($validator->validated()["person_id"]),
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function showByID(int $id): JsonResponse {
+        $person = Person::where('id', $id)->first();
+
+        if ($person === null) {
+            return response()->json([
+                'message' => 'Person not found, please check your ID',
+            ], 400);
+        }
+
+        return response()->json([
+            'message' => 'Person successfully associated',
+            'person' => Person::where('id', $id)->first()
+        ]);
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function update(Request $request, int $id): JsonResponse {
+        $updateData = $request->validate([
+            'phone' => 'required|numeric',
+            'address' => 'required|max:255',
+        ]);
+        Person::whereId($id)->update($updateData);
+
+        return response()->json([
+            'message' => 'Person successfully updated',
+            'person' => Person::find($id),
+        ]);
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return Response
+     */
+    public function destroy($id): Response {
+        $person = Person::findOrFail($id);
+        $person->delete();
+
+        return redirect('/person')->with('completed', 'Person has been deleted');
+    }
+}
