@@ -118,6 +118,8 @@ class AuthController extends Controller {
      * @return JsonResponse
      */
     protected function createNewToken($token) {
+        $user = User::where('id', auth()->user()->id)->update(['remember_token' => $token]);
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',

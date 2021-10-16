@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 
 class PersonController extends Controller {
     public function __construct() {
-        // $this->middleware('check.jwt');
+        $this->middleware('check.jwt');
     }
 
     /**

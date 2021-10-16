@@ -19,8 +19,13 @@ class CheckApiToken extends BaseMiddleware {
      * @return mixed
      */
     public function handle(Request $request, Closure $next) {
+        $currentToken = $request->bearerToken();
         try {
             $user = JWTAuth::parseToken()->authenticate();
+            if ($user->remember_token !== $currentToken) {
+                return response()->json(['status' => 'You already have an open session'], 401);
+            }
+
         } catch (Exception $e) {
             if ($e instanceof TokenInvalidException) {
                 return response()->json(['status' => 'Token is Invalid'], 401);
