@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Person;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 
 class PersonController extends Controller {
@@ -53,10 +54,11 @@ class PersonController extends Controller {
 
 
     /**
-     * Refresh a token.
+     * Associate person to a User.
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ValidationException
      */
     public function associatePerson(Request $request): JsonResponse {
         $user = auth()->user();
@@ -120,7 +122,13 @@ class PersonController extends Controller {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        Person::whereId($id)->update($validator->validated());
+        $updated = Person::whereId($id)->update($validator->validated());
+
+        if ($updated === 0) {
+            return response()->json([
+                'message' => 'Person not found, please check your ID',
+            ], 400);
+        }
 
         return response()->json([
             'message' => 'Person successfully updated',

@@ -10,8 +10,11 @@ class Person extends Model {
 
     protected $fillable = ['name', 'last_name', 'phone', 'curp', 'address', 'user_id' ];
 
+    protected $hidden = [
+        'status',
+    ];
+
     public function user() {
         return $this->belongsTo(User::class);
     }
-
 }
