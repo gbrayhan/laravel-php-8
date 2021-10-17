@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\Transaction;
+use App\Models\User;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -46,23 +48,35 @@ class TransactionController extends Controller {
         $sourceAccount = Account::where('account_number', $request->input('source_account'))->first();
         $userSourceAccount = $sourceAccount->person->user;
 
-        if ($userSourceAccount->id !== $user->id) {
+        if ($userSourceAccount === null || $userSourceAccount->id !== $user->id) {
             return response()->json([
                 'message' => 'Transaction not allowed',
             ], 405);
         }
 
 
-        return Transaction::create([
-            'source_account' => $request->input('source_account'),
-            'destination_account' => $request->input('destination_account'),
-            'operation_type' => $request->input('operation_type'),
-            'amount' => $request->input('amount'),
-            'concept' => $request->input('concept'),
-            'reference' => $request->input('reference'),
-            'transaction_date' => now(),
-            'user_id' => $user->id,
-        ]);
+        try {
+            $transaction = Transaction::create([
+                'source_account' => $request->input('source_account'),
+                'destination_account' => $request->input('destination_account'),
+                'operation_type' => $request->input('operation_type'),
+                'amount' => $request->input('amount'),
+                'concept' => $request->input('concept'),
+                'reference' => $request->input('reference'),
+                'transaction_date' => now(),
+                'user_id' => $user->id,
+            ]);
+
+            return response()->json([
+                'message' => 'Transaction successfully created',
+                'transaction' => $transaction,
+            ], 201);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Internal Error',
+            ], 500);
+        }
     }
 
     /**
