@@ -88,11 +88,11 @@
         "/auth/login": {
             "get": {
                 "tags": [
-                    "Person"
+                    "Auth"
                 ],
-                "summary": "Get list of persons",
-                "description": "Returns list of persons",
-                "operationId": "getProjectsList",
+                "summary": "Login User",
+                "description": "User Login",
+                "operationId": "login",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -100,9 +100,20 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
+                                        "access_token": {
                                             "type": "string",
-                                            "example": "Sorry, wrong email address or password. Please try again"
+                                            "example": "hdXRoXC9sb2dpbiIs.ImlhdCI6MTYzNDQ0NTg2NCwiZXhwIjoxNjM0NDQ5NDY0LCJu.wa"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": "3600"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
                                         }
                                     },
                                     "type": "object"
@@ -116,6 +127,290 @@
                     "403": {
                         "description": "Forbidden"
                     }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Account": {
+                "required": [
+                    "account_number",
+                    "person_id",
+                    "product",
+                    "balance"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "account_number": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "example": "00919222G122"
+                    },
+                    "person_id": {
+                        "type": "integer",
+                        "readOnly": "false",
+                        "example": "2211"
+                    },
+                    "product": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "BBVA CC"
+                    },
+                    "balance": {
+                        "type": "decimal",
+                        "maxLength": 32,
+                        "example": "12.5"
+                    },
+                    "created_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2019-02-25 12:59:20"
+                    },
+                    "updated_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2019-02-25 12:59:20"
+                    },
+                    "deleted_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2019-02-25 12:59:20"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Account"
+                }
+            },
+            "Person": {
+                "required": [
+                    "name",
+                    "last_name",
+                    "phone",
+                    "curp",
+                    "address"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "John"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "Doe"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "+52 5544332211"
+                    },
+                    "curp": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "GGSS923211HDFBRR01"
+                    },
+                    "address": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Av Elementia 12, Arcos de Vallarta, Guadalajara, Jalisco, Mexico"
+                    },
+                    "created_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2019-02-25 12:59:20"
+                    },
+                    "updated_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2019-02-25 12:59:20"
+                    },
+                    "deleted_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2019-02-25 12:59:20"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Person"
+                }
+            },
+            "Transaction": {
+                "required": [
+                    "source_account",
+                    "destinatio_account",
+                    "operation_type",
+                    "amount",
+                    "concept",
+                    "reference"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "source_account": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "example": "234421A123342"
+                    },
+                    "destinatio_account": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "example": "234421A123342"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "readOnly": "false",
+                        "example": "1"
+                    },
+                    "operation_type": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "abono"
+                    },
+                    "amount": {
+                        "type": "decimal",
+                        "maxLength": 32,
+                        "example": "120.9"
+                    },
+                    "concept": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "example": "Pago de servicio"
+                    },
+                    "reference": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "example": "KJ1231234A"
+                    },
+                    "transaction_date": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "false",
+                        "example": "2019-02-25 12:59:20"
+                    },
+                    "status": {
+                        "description": "Status of the transaction",
+                        "type": "string",
+                        "readOnly": "false",
+                        "example": "pending"
+                    },
+                    "created_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2019-02-25 12:59:20"
+                    },
+                    "updated_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2019-02-25 12:59:20"
+                    },
+                    "deleted_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2019-02-25 12:59:20"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Transaction"
+                }
+            },
+            "User": {
+                "required": [
+                    "email",
+                    "name",
+                    "password"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "role": {
+                        "description": "User role",
+                        "type": "string",
+                        "readOnly": "true",
+                        "example": "admin"
+                    },
+                    "email": {
+                        "description": "User unique email address",
+                        "type": "string",
+                        "format": "email",
+                        "readOnly": "true",
+                        "example": "user@gmail.com"
+                    },
+                    "email_verified_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2019-02-25 12:59:20"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "John Doe"
+                    },
+                    "created_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2019-02-25 12:59:20"
+                    },
+                    "updated_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2019-02-25 12:59:20"
+                    },
+                    "deleted_at": {
+                        "description": "Datetime marker of verification status",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true",
+                        "example": "2019-02-25 12:59:20"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "User"
                 }
             }
         }

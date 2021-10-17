@@ -10,7 +10,24 @@ use Laravel\Sanctum\HasApiTokens;
 
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-
+/**
+ *
+ * @OA\Schema(
+ *     required={"email", "name", "password"},
+ *     @OA\Xml(name="User"),
+ *     @OA\Property(property="id", type="integer", readOnly="true", example="1"),
+ *     @OA\Property(property="role", type="string", readOnly="true", description="User role",  example="admin"),
+ *     @OA\Property(property="email", type="string", readOnly="true", format="email", description="User unique email address", example="user@gmail.com"),
+ *     @OA\Property(property="email_verified_at", type="string", readOnly="true", format="date-time", description="Datetime marker of verification status", example="2019-02-25 12:59:20"),
+ *     @OA\Property(property="name", type="string", maxLength=32, example="John Doe"),
+ *     @OA\Property(property="created_at", type="string", readOnly="true", format="date-time", description="Datetime marker of verification status", example="2019-02-25 12:59:20"),
+ *     @OA\Property(property="updated_at", type="string", readOnly="true", format="date-time", description="Datetime marker of verification status", example="2019-02-25 12:59:20"),
+ *     @OA\Property(property="deleted_at",type="string", readOnly="true", format="date-time", description="Datetime marker of verification status", example="2019-02-25 12:59:20")
+ * )
+ *
+ * Class User
+ *
+ */
 class User extends Authenticatable implements JWTSubject {
     use HasApiTokens, HasFactory, Notifiable;
 

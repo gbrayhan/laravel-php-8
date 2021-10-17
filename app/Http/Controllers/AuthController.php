@@ -37,7 +37,10 @@ class AuthController extends Controller {
      *          response=200,
      *          description="Successful operation",
      *          @OA\JsonContent(
-     *              @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *              @OA\Property(property="access_token", type="string", example="hdXRoXC9sb2dpbiIs.ImlhdCI6MTYzNDQ0NTg2NCwiZXhwIjoxNjM0NDQ5NDY0LCJu.wa"),
+     *              @OA\Property(property="token_type", type="string", example="bearer"),
+     *              @OA\Property(property="expires_in", type="integer", example="3600"),
+     *              @OA\Property(property="user", type="object", ref="#/components/schemas/User"),
      *          )
      *       ),
      *      @OA\Response(
