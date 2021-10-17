@@ -27,11 +27,28 @@ class AuthController extends Controller {
     }
 
     /**
-     * Get a JWT via given credentials.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidationException
+     * @OA\Get(
+     *      path="/auth/login",
+     *      operationId="login",
+     *      tags={"Auth"},
+     *      summary="Login User",
+     *      description="User Login",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *          )
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *     )
      */
     public function login(Request $request): JsonResponse {
         $validator = Validator::make($request->all(), [

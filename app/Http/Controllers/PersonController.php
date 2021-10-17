@@ -16,9 +16,28 @@ class PersonController extends Controller {
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return Collection|Person[]
+     * @OA\Get(
+     *      path="/person",
+     *      operationId="getProjectsList",
+     *      tags={"Person"},
+     *      summary="Get list of persons",
+     *      description="Returns list of persons",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *          )
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *     )
      */
     public function showAll(): Collection|array {
         return Person::all();

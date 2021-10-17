@@ -13,10 +13,28 @@ class AccountController extends Controller {
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Post (
+     *      path="/person",
+     *      operationId="getProjectsList",
+     *      tags={"Person"},
+     *      summary="Get list of persons",
+     *      description="Returns list of persons",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *          )
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *     )
      */
     public function store(Request $request): JsonResponse {
         $validator = Validator::make($request->all(), [
