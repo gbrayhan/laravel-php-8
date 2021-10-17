@@ -11,11 +11,6 @@ use Illuminate\Validation\ValidationException;
 
 
 class AuthController extends Controller {
-    /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
     public function __construct() {
         $this->middleware('auth:api', ['except' => ['login', 'loginStatus', 'register']]);
     }
@@ -45,7 +40,7 @@ class AuthController extends Controller {
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['message' => $validator->errors()], 400);
         }
 
         if (!$token = auth()->attempt($validator->validated())) {
@@ -70,7 +65,7 @@ class AuthController extends Controller {
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json(['message' => $validator->errors()], 400);
         }
 
         $user = User::create(array_merge(

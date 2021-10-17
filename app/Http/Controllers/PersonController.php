@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Person;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -38,12 +37,12 @@ class PersonController extends Controller {
             'name' => 'required|max:255',
             'last_name' => 'required|max:255',
             'phone' => 'required|numeric',
-            'curp' => 'required|max:255',
+            'curp' => 'required|max:255|unique:people',
             'address' => 'required|max:255',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json(['message' => $validator->errors()], 400);
         }
         $person = Person::create($validator->validated());
 
@@ -68,7 +67,7 @@ class PersonController extends Controller {
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json(['message' => $validator->errors()], 400);
         }
         $person = Person::where('id', $validator->validated()["person_id"])->update(['user_id' => $user->id]);
 
@@ -112,6 +111,7 @@ class PersonController extends Controller {
      * @param Request $request
      * @param int $id
      * @return JsonResponse
+     * @throws ValidationException
      */
     public function update(Request $request, int $id): JsonResponse {
         $validator = Validator::make($request->all(), [
@@ -120,7 +120,7 @@ class PersonController extends Controller {
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json(['message' => $validator->errors()], 400);
         }
 
         $updated = Person::whereId($id)->update($validator->validated());
@@ -138,16 +138,4 @@ class PersonController extends Controller {
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return Response
-     */
-    public function destroy($id): Response {
-        $person = Person::findOrFail($id);
-        $person->delete();
-
-        return redirect('/person')->with('completed', 'Person has been deleted');
-    }
 }

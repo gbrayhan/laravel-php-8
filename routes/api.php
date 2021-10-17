@@ -33,6 +33,7 @@ Route::group([
 Route::group([
     'prefix' => 'person'
 ], function ($router) {
+    Route::get('/', [PersonController::class, 'showAll']);
     Route::post('/', [PersonController::class, 'store']);
     Route::post('/associate-person', [PersonController::class, 'associatePerson']);
     Route::get('/{id}', [PersonController::class, 'showByID']);
@@ -51,6 +52,7 @@ Route::group([
 Route::group([
     'prefix' => 'transaction'
 ], function ($router) {
+    Route::get('/', [TransactionController::class, 'showAll']);
     Route::post('/', [TransactionController::class, 'store']);
     Route::get('/own-user', [TransactionController::class, 'showOwnUser']);
     Route::get('/{id}', [TransactionController::class, 'showByID']);
