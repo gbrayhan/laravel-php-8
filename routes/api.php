@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\PersonController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
@@ -21,7 +22,7 @@ Route::group([
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/login', [AuthController::class, 'loginStatus']);
+    Route::get('/login', [AuthController::class, 'loginStatus'])->name('login');
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
@@ -36,7 +37,23 @@ Route::group([
     Route::post('/associate-person', [PersonController::class, 'associatePerson']);
     Route::get('/{id}', [PersonController::class, 'showByID']);
     Route::put('/{id}', [PersonController::class, 'update']);
+});
 
+
+Route::group([
+    'prefix' => 'account'
+], function ($router) {
+    Route::post('/', [AccountController::class, 'store']);
+    Route::get('/{id}', [AccountController::class, 'showByID']);
+});
+
+
+Route::group([
+    'prefix' => 'transaction'
+], function ($router) {
+    Route::post('/', [TransactionController::class, 'store']);
+    Route::get('/own-user', [TransactionController::class, 'showOwnUser']);
+    Route::get('/{id}', [TransactionController::class, 'showByID']);
 });
 
 

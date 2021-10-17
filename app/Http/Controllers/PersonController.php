@@ -31,6 +31,7 @@ class PersonController extends Controller {
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws ValidationException
      */
     public function store(Request $request): JsonResponse {
         $validator = Validator::make($request->all(), [
@@ -47,7 +48,7 @@ class PersonController extends Controller {
         $person = Person::create($validator->validated());
 
         return response()->json([
-            'message' => 'Person creada exitosamente',
+            'message' => 'Person created successfully',
             'persona' => $person
         ], 201);
     }

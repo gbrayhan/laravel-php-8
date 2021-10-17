@@ -4,29 +4,25 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAccountsTable extends Migration
-{
+class CreateAccountsTable extends Migration {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('accounts', function (Blueprint $table) {
-
             $table->bigIncrements('id');
             $table->unsignedBigInteger('person_id')->nullable();
 
             $table->string('account_number')->unique();
             $table->string('product');
             $table->decimal('balance')->nullable(false);
-            $table->string('status');
+            $table->string('status')->nullable()->change();
             $table->unsignedInteger('nip')->nullable(false);
             $table->timestamps();
 
             $table->foreign('person_id')->references('id')->on('people');
-
         });
     }
 
@@ -35,8 +31,7 @@ class CreateAccountsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('accounts');
     }
 }

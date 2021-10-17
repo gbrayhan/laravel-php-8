@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Person;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 
 class AuthController extends Controller {
@@ -18,7 +17,7 @@ class AuthController extends Controller {
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'loginStatus', 'register']]);
     }
 
     /**
@@ -26,7 +25,7 @@ class AuthController extends Controller {
      *
      * @return JsonResponse
      */
-    public function loginStatus(Request $request): JsonResponse {
+    public function loginStatus(): JsonResponse {
         return response()->json([
             'message' => 'status auth here',
         ]);
@@ -35,9 +34,11 @@ class AuthController extends Controller {
     /**
      * Get a JWT via given credentials.
      *
+     * @param Request $request
      * @return JsonResponse
+     * @throws ValidationException
      */
-    public function login(Request $request) {
+    public function login(Request $request): JsonResponse {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string|min:6',
@@ -57,9 +58,11 @@ class AuthController extends Controller {
     /**
      * Register a User.
      *
+     * @param Request $request
      * @return JsonResponse
+     * @throws ValidationException
      */
-    public function register(Request $request) {
+    public function register(Request $request): JsonResponse {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
@@ -72,7 +75,7 @@ class AuthController extends Controller {
 
         $user = User::create(array_merge(
             $validator->validated(),
-            ['password' => bcrypt($request->password)]
+            ['password' => bcrypt($request->input('password'))]
         ));
 
         return response()->json([
@@ -87,7 +90,7 @@ class AuthController extends Controller {
      *
      * @return JsonResponse
      */
-    public function logout() {
+    public function logout(): JsonResponse {
         auth()->logout();
         return response()->json(['message' => 'User successfully signed out']);
     }
@@ -97,7 +100,7 @@ class AuthController extends Controller {
      *
      * @return JsonResponse
      */
-    public function refresh() {
+    public function refresh(): JsonResponse {
         return $this->createNewToken(auth()->refresh());
     }
 
@@ -106,7 +109,7 @@ class AuthController extends Controller {
      *
      * @return JsonResponse
      */
-    public function userProfile() {
+    public function userProfile(): JsonResponse {
         return response()->json(auth()->user());
     }
 
@@ -117,7 +120,7 @@ class AuthController extends Controller {
      *
      * @return JsonResponse
      */
-    protected function createNewToken($token) {
+    protected function createNewToken($token): JsonResponse {
         $user = User::where('id', auth()->user()->id)->update(['remember_token' => $token]);
 
         return response()->json([
