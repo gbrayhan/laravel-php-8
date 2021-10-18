@@ -14,7 +14,7 @@
     },
     "servers": [
         {
-            "url": "localhost:8000/api",
+            "url": "http://localhost:8000/api",
             "description": "Demo API Server"
         }
     ],
@@ -86,13 +86,34 @@
             }
         },
         "/auth/login": {
-            "get": {
+            "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Login User",
                 "description": "User Login",
                 "operationId": "login",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "email",
+                                        "type": "string",
+                                        "example": "gbrayhan@gmail.com"
+                                    },
+                                    "password": {
+                                        "description": "password",
+                                        "type": "string",
+                                        "example": "Golang77"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -128,6 +149,140 @@
                         "description": "Forbidden"
                     }
                 }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register User",
+                "description": "Register Login",
+                "operationId": "register",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "name",
+                                        "type": "string",
+                                        "example": "Alex"
+                                    },
+                                    "email": {
+                                        "description": "email",
+                                        "type": "string",
+                                        "example": "gbrayhan@gmail.com"
+                                    },
+                                    "password": {
+                                        "description": "password",
+                                        "type": "string",
+                                        "example": "Golang77"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "password_confirmation",
+                                        "type": "string",
+                                        "example": "Golang77"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User successfully registered"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/auth/user-profile": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User Profile User",
+                "description": "User Information",
+                "operationId": "userProfile",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "readOnly": "true",
+                                            "example": "1"
+                                        },
+                                        "email": {
+                                            "description": "User unique email address",
+                                            "type": "string",
+                                            "format": "email",
+                                            "readOnly": "true",
+                                            "example": "user@gmail.com"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "maxLength": 32,
+                                            "example": "John Doe"
+                                        },
+                                        "created_at": {
+                                            "description": "Datetime marker of verification status",
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "readOnly": "true",
+                                            "example": "2019-02-25 12:59:20"
+                                        },
+                                        "updated_at": {
+                                            "description": "Datetime marker of verification status",
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "readOnly": "true",
+                                            "example": "2019-02-25 12:59:20"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
             }
         }
     },
@@ -412,6 +567,14 @@
                 "xml": {
                     "name": "User"
                 }
+            }
+        },
+        "securitySchemes": {
+            "bearer_token": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer [TOKEN])",
+                "name": "Authorization",
+                "in": "header"
             }
         }
     },

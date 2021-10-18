@@ -27,12 +27,31 @@ class AuthController extends Controller {
     }
 
     /**
-     * @OA\Get(
+     * @OA\Post(
      *      path="/auth/login",
      *      operationId="login",
      *      tags={"Auth"},
      *      summary="Login User",
      *      description="User Login",
+     *     @OA\RequestBody(
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                      property="email",
+     *                      type="string",
+     *                      description="email",
+     *                      example="gbrayhan@gmail.com"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="password",
+     *                      type="string",
+     *                      description="password",
+     *                      example="Golang77"
+     *                  )
+     *              )
+     *          )
+     *      ),
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -71,11 +90,60 @@ class AuthController extends Controller {
     }
 
     /**
-     * Register a User.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidationException
+     * @OA\Post(
+     *      path="/auth/register",
+     *      operationId="register",
+     *      tags={"Auth"},
+     *      summary="Register User",
+     *      description="Register Login",
+     *     @OA\RequestBody(
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                      property="name",
+     *                      type="string",
+     *                      description="name",
+     *                      example="Alex"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="email",
+     *                      type="string",
+     *                      description="email",
+     *                      example="gbrayhan@gmail.com"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="password",
+     *                      type="string",
+     *                      description="password",
+     *                      example="Golang77"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="password_confirmation",
+     *                      type="string",
+     *                      description="password_confirmation",
+     *                      example="Golang77"
+     *                  )
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="User successfully registered"),
+     *              @OA\Property(property="user", type="object", ref="#/components/schemas/User"),
+     *          )
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *     )
      */
     public function register(Request $request): JsonResponse {
         $validator = Validator::make($request->all(), [
@@ -120,9 +188,33 @@ class AuthController extends Controller {
     }
 
     /**
-     * Get the authenticated User.
-     *
-     * @return JsonResponse
+     * @OA\Get(
+     *      path="/auth/user-profile",
+     *      operationId="userProfile",
+     *      tags={"Auth"},
+     *      summary="User Profile User",
+     *      description="User Information",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="id", type="integer", readOnly="true", example="1"),
+     *              @OA\Property(property="email", type="string", readOnly="true", format="email", description="User unique email address", example="user@gmail.com"),
+     *              @OA\Property(property="name", type="string", maxLength=32, example="John Doe"),
+     *              @OA\Property(property="created_at", type="string", readOnly="true", format="date-time", description="Datetime marker of verification status", example="2019-02-25 12:59:20"),
+     *              @OA\Property(property="updated_at", type="string", readOnly="true", format="date-time", description="Datetime marker of verification status", example="2019-02-25 12:59:20"),
+     *          ),
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     *       security={{"bearer_token":{}}}
+     *   )
      */
     public function userProfile(): JsonResponse {
         return response()->json(auth()->user());

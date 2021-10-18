@@ -26,7 +26,6 @@ use Illuminate\Routing\Controller as BaseController;
  *      url=L5_SWAGGER_CONST_HOST,
  *      description="Demo API Server"
  * )
-
  *
  */
 class Controller extends BaseController {
