@@ -14,9 +14,9 @@ class AccountController extends Controller {
 
     /**
      * @OA\Post (
-     *      path="/person",
+     *      path="/account",
      *      operationId="getProjectsList",
-     *      tags={"Person"},
+     *      tags={"Account"},
      *      summary="Get list of persons",
      *      description="Returns list of persons",
      *      @OA\Response(

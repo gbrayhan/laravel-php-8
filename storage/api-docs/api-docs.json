@@ -19,42 +19,10 @@
         }
     ],
     "paths": {
-        "/person": {
-            "get": {
-                "tags": [
-                    "Person"
-                ],
-                "summary": "Get list of persons",
-                "description": "Returns list of persons",
-                "operationId": "getProjectsList",
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Sorry, wrong email address or password. Please try again"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                }
-            },
+        "/account": {
             "post": {
                 "tags": [
-                    "Person"
+                    "Account"
                 ],
                 "summary": "Get list of persons",
                 "description": "Returns list of persons",
@@ -273,6 +241,174 @@
                     },
                     "401": {
                         "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/person": {
+            "get": {
+                "tags": [
+                    "Person"
+                ],
+                "summary": "Get list of persons",
+                "description": "Returns list of persons",
+                "operationId": "getProjectsList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sorry, wrong email address or password. Please try again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Person"
+                ],
+                "summary": "Register Person",
+                "description": "Register Person",
+                "operationId": "storePerson",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "name",
+                                        "type": "string",
+                                        "example": "Alex"
+                                    },
+                                    "last_name": {
+                                        "description": "last name",
+                                        "type": "string",
+                                        "example": "Guerrero"
+                                    },
+                                    "phone": {
+                                        "description": "phone",
+                                        "type": "string",
+                                        "example": "+554422331122"
+                                    },
+                                    "curp": {
+                                        "description": "CURP",
+                                        "type": "string",
+                                        "example": "GGAA887777HDFBRR01"
+                                    },
+                                    "address": {
+                                        "description": "Address",
+                                        "type": "string",
+                                        "example": "Av Elementia, Zapopan Jalisco, Mexico"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Person created successfully"
+                                        },
+                                        "person": {
+                                            "$ref": "#/components/schemas/Person"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/person/associate-person": {
+            "post": {
+                "tags": [
+                    "Person"
+                ],
+                "summary": "Associate Person to the current user",
+                "description": "ssociate Person to the current user",
+                "operationId": "associatePerson",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "person_id": {
+                                        "description": "Person Identifier",
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Person successfully associated"
+                                        },
+                                        "person": {
+                                            "$ref": "#/components/schemas/Person"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
                     },
                     "403": {
                         "description": "Forbidden"

@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 class PersonController extends Controller {
     public function __construct() {
-        $this->middleware('check.jwt');
+        $this->middleware('check.jwt', ['except' => ['store']]);
     }
 
     /**
@@ -22,6 +22,7 @@ class PersonController extends Controller {
      *      tags={"Person"},
      *      summary="Get list of persons",
      *      description="Returns list of persons",
+     *      security={{"bearer_token":{}}},
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -45,11 +46,67 @@ class PersonController extends Controller {
 
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *      path="/person",
+     *      operationId="storePerson",
+     *      tags={"Person"},
+     *      summary="Register Person",
+     *      description="Register Person",
+     *      @OA\RequestBody(
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                      property="name",
+     *                      type="string",
+     *                      description="name",
+     *                      example="Alex"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="last_name",
+     *                      type="string",
+     *                      description="last name",
+     *                      example="Guerrero"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="phone",
+     *                      type="string",
+     *                      description="phone",
+     *                      example="+554422331122"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="curp",
+     *                      type="string",
+     *                      description="CURP",
+     *                      example="GGAA887777HDFBRR01"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="address",
+     *                      type="string",
+     *                      description="Address",
+     *                      example="Av Elementia, Zapopan Jalisco, Mexico"
+     *                  )
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Person created successfully"),
+     *              @OA\Property(property="person", type="object", ref="#/components/schemas/Person")
+     *          )
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *   )
      *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidationException
      */
     public function store(Request $request): JsonResponse {
         $validator = Validator::make($request->all(), [
@@ -67,17 +124,50 @@ class PersonController extends Controller {
 
         return response()->json([
             'message' => 'Person created successfully',
-            'persona' => $person
+            'person' => $person
         ], 201);
     }
 
 
     /**
-     * Associate person to a User.
+     * @OA\Post(
+     *      path="/person/associate-person",
+     *      operationId="associatePerson",
+     *      tags={"Person"},
+     *      summary="Associate Person to the current user",
+     *      description="ssociate Person to the current user",
+     *      security={{"bearer_token":{}}},
+     *      @OA\RequestBody(
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                      property="person_id",
+     *                      type="integer",
+     *                      description="Person Identifier",
+     *                      example="1"
+     *                  ),
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="message", type="string", example="Person successfully associated"),
+     *              @OA\Property(property="person", type="object", ref="#/components/schemas/Person")
+     *          )
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *   )
      *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidationException
      */
     public function associatePerson(Request $request): JsonResponse {
         $user = auth()->user();
