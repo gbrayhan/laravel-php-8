@@ -106,10 +106,30 @@ class AccountController extends Controller {
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return JsonResponse
+     * @OA\Get (
+     *      path="/account/{id}",
+     *      operationId="finAccountByID",
+     *      tags={"Account"},
+     *      summary="Find Account by Id",
+     *      description="Find Account by Id",
+     *      security={{"bearer_token":{}}},
+     *      @OA\Parameter(name="id", in="path", description="useful data by id", required=true),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="account", type="object", ref="#/components/schemas/Account"),
+     *          )
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *     )
      */
     public function showByID(int $id): JsonResponse {
         $person = Account::where('id', $id)->first();

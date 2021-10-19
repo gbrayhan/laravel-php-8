@@ -97,6 +97,52 @@
                 ]
             }
         },
+        "/account/{id}": {
+            "get": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Find Account by Id",
+                "description": "Find Account by Id",
+                "operationId": "finAccountByID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "useful data by id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "account": {
+                                            "$ref": "#/components/schemas/Account"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/auth/login": {
             "post": {
                 "tags": [
@@ -464,6 +510,203 @@
                     }
                 ]
             }
+        },
+        "/transaction": {
+            "post": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Register Transaction",
+                "description": "Register Transaction",
+                "operationId": "transactionStore",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "source_account": {
+                                        "description": "Source Account",
+                                        "type": "string",
+                                        "example": "222A12311"
+                                    },
+                                    "destination_account": {
+                                        "description": "Destination Account",
+                                        "type": "string",
+                                        "example": "44222A12311"
+                                    },
+                                    "operation_type": {
+                                        "description": "Operation Type",
+                                        "type": "string",
+                                        "example": "abono"
+                                    },
+                                    "amount": {
+                                        "description": "Amount",
+                                        "type": "decimal",
+                                        "example": "120.1234"
+                                    },
+                                    "concept": {
+                                        "description": "Concept",
+                                        "type": "string",
+                                        "example": "Pago de Servicio"
+                                    },
+                                    "reference": {
+                                        "description": "Reference",
+                                        "type": "string",
+                                        "example": "F112334"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "transaction created successfully"
+                                        },
+                                        "transaction": {
+                                            "$ref": "#/components/schemas/Transaction"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/transaction/own-user": {
+            "get": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Transaction for a Current User",
+                "description": "Transaction for a Current User",
+                "operationId": "transactionStore",
+                "parameters": [
+                    {
+                        "parameter": "page",
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page in pagination",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": "2"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Transaction"
+                                            }
+                                        },
+                                        "first_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost/api/transaction/own-user?page=1"
+                                        },
+                                        "from": {
+                                            "type": "string",
+                                            "example": "5"
+                                        },
+                                        "last_page": {
+                                            "type": "string",
+                                            "example": "3"
+                                        },
+                                        "last_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost/api/transaction/own-user?page=3"
+                                        },
+                                        "links": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "url": {
+                                                        "type": "string",
+                                                        "example": "http://localhost/api/transaction/own-user?page=1"
+                                                    },
+                                                    "label": {
+                                                        "type": "string",
+                                                        "example": "1"
+                                                    },
+                                                    "active": {
+                                                        "type": "boolean",
+                                                        "example": "false"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "next_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost/api/transaction/own-user?page=4"
+                                        },
+                                        "path": {
+                                            "type": "string",
+                                            "example": "http://localhost/api/transaction/own-user"
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": "5"
+                                        },
+                                        "prev_page_url": {
+                                            "type": "string",
+                                            "example": "http://localhost/api/transaction/own-user?page=4"
+                                        },
+                                        "to": {
+                                            "type": "integer",
+                                            "example": "10"
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": "14"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -495,11 +738,6 @@
                         "type": "string",
                         "maxLength": 32,
                         "example": "BBVA CC"
-                    },
-                    "balance": {
-                        "type": "decimal",
-                        "maxLength": 32,
-                        "example": "12.5"
                     },
                     "created_at": {
                         "description": "Datetime marker of verification status",
