@@ -24,9 +24,45 @@
                 "tags": [
                     "Account"
                 ],
-                "summary": "Get list of persons",
-                "description": "Returns list of persons",
-                "operationId": "getProjectsList",
+                "summary": "Register Account",
+                "description": "Register Account",
+                "operationId": "accountStore",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "account_number": {
+                                        "description": "Account Number",
+                                        "type": "string",
+                                        "example": "222A12311"
+                                    },
+                                    "person_id": {
+                                        "description": "Person ID",
+                                        "type": "integer",
+                                        "example": "12"
+                                    },
+                                    "product": {
+                                        "description": "Product",
+                                        "type": "string",
+                                        "example": "bbva-credit"
+                                    },
+                                    "balance": {
+                                        "description": "Balance",
+                                        "type": "decimal",
+                                        "example": "130.2"
+                                    },
+                                    "nip": {
+                                        "description": "NIP",
+                                        "type": "integer",
+                                        "example": "112334"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -36,7 +72,10 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Sorry, wrong email address or password. Please try again"
+                                            "example": "Account created successfully"
+                                        },
+                                        "account": {
+                                            "$ref": "#/components/schemas/Account"
                                         }
                                     },
                                     "type": "object"
@@ -44,13 +83,18 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Unauthenticated"
+                    "400": {
+                        "description": "Bad Request"
                     },
                     "403": {
                         "description": "Forbidden"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
             }
         },
         "/auth/login": {

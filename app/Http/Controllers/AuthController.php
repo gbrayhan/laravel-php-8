@@ -71,6 +71,7 @@ class AuthController extends Controller {
      *          description="Forbidden"
      *      )
      *     )
+     * @throws ValidationException
      */
     public function login(Request $request): JsonResponse {
         $validator = Validator::make($request->all(), [
@@ -144,6 +145,7 @@ class AuthController extends Controller {
      *          description="Forbidden"
      *      )
      *     )
+     * @throws ValidationException
      */
     public function register(Request $request): JsonResponse {
         $validator = Validator::make($request->all(), [

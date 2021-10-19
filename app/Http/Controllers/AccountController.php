@@ -6,6 +6,7 @@ use App\Models\Account;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class AccountController extends Controller {
     public function __construct() {
@@ -13,22 +14,61 @@ class AccountController extends Controller {
     }
 
     /**
-     * @OA\Post (
+     * @OA\Post(
      *      path="/account",
-     *      operationId="getProjectsList",
+     *      operationId="accountStore",
      *      tags={"Account"},
-     *      summary="Get list of persons",
-     *      description="Returns list of persons",
+     *      summary="Register Account",
+     *      description="Register Account",
+     *      security={{"bearer_token":{}}},
+     *     @OA\RequestBody(
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  @OA\Property(
+     *                      property="account_number",
+     *                      type="string",
+     *                      description="Account Number",
+     *                      example="222A12311"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="person_id",
+     *                      type="integer",
+     *                      description="Person ID",
+     *                      example="12"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="product",
+     *                      type="string",
+     *                      description="Product",
+     *                      example="bbva-credit"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="balance",
+     *                      type="decimal",
+     *                      description="Balance",
+     *                      example="130.2"
+     *                  ),
+     *                  @OA\Property(
+     *                      property="nip",
+     *                      type="integer",
+     *                      description="NIP",
+     *                      example="112334"
+     *                  )
+     *              )
+     *          )
+     *      ),
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
      *          @OA\JsonContent(
-     *              @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *              @OA\Property(property="message", type="string", example="Account created successfully"),
+     *              @OA\Property(property="account", type="object", ref="#/components/schemas/Account"),
      *          )
      *       ),
      *      @OA\Response(
-     *          response=401,
-     *          description="Unauthenticated",
+     *          response=400,
+     *          description="Bad Request",
      *      ),
      *      @OA\Response(
      *          response=403,
@@ -61,7 +101,7 @@ class AccountController extends Controller {
 
         return response()->json([
             'message' => 'Account created successfully',
-            'persona' => $account
+            'account' => $account
         ], 201);
     }
 
