@@ -70,9 +70,9 @@ git clone git@github.com:gbrayhan/bp-challenge.git
 cd bp-challenge
 cp .env.example .env
 docker-compose up -d
-docker-compose exec php php artisan key:generate
-docker-compose exec php php artisan jwt:secret
-docker-compose exec php php artisan migrate
+docker exec php_app php artisan key:generate
+docker exec php_app php artisan jwt:secret
+docker exec php_app php artisan migrate
 ```
 
 The api can be accessed at [http://localhost:8000/api](http://localhost:8000/api).
