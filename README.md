@@ -55,6 +55,7 @@ You can now access the server at http://localhost:8000
     php artisan key:generate
     php artisan jwt:secret
 
+
 **Make sure you set the correct database connection information before running the migrations** [Environment variables](#environment-variables)
 
     php artisan migrate
@@ -67,14 +68,11 @@ To install with [Docker](https://www.docker.com), run following commands:
 ```
 git clone git@github.com:gbrayhan/bp-challenge.git
 cd bp-challenge
-cp .env.example.docker .env
-docker run -v $(pwd):/app composer install
-cd ./docker
+cp .env.example .env
 docker-compose up -d
 docker-compose exec php php artisan key:generate
 docker-compose exec php php artisan jwt:secret
 docker-compose exec php php artisan migrate
-docker-compose exec php php artisan serve --host=0.0.0.0
 ```
 
 The api can be accessed at [http://localhost:8000/api](http://localhost:8000/api).

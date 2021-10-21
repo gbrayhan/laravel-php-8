@@ -14,6 +14,4 @@ RUN install-php-extensions gd pdo_mysql bcmath zip intl opcache
 RUN a2enmod rewrite
 
 
-RUN php artisan key:generate &&  php artisan jwt:secret
-
 
