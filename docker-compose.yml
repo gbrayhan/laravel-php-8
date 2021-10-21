@@ -1,0 +1,46 @@
+version: '3.9'
+
+networks:
+  php_network:
+    driver: bridge
+
+services:
+  php_app:
+    depends_on:
+      - mysql_php
+    build: .
+    container_name: php_app
+    ports:
+      - "8000:80"
+    working_dir: /var/www/html
+    volumes:
+      - /var/www/html/vendor/
+      - ./:/var/www/html
+      - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled
+      - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
+    restart: always
+    networks:
+      - php_network
+  mysql_php:
+    image: mariadb:10.5.9
+    restart: always
+    container_name: mysql_php
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: bpchallenge
+      MYSQL_USER: bpuser
+      MYSQL_PASSWORD: bppass
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/db/mariadb/my.cnf:/etc/mysql/conf.d/my.cnf
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=rootpass
+      interval: 5s
+      retries: 5
+    networks:
+      - php_network
+volumes:
+  db_data:
