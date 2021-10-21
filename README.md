@@ -1,4 +1,4 @@
-# BP Challenge App
+# Boilerplate Laravel 8 and PHP 8 
 
 This repo is functionality complete — PRs and issues welcome!
 
@@ -14,11 +14,11 @@ Alternative installation is possible without local dependencies relying on [Dock
 
 Clone the repository
 
-    git clone git@github.com:gbrayhan/bp-challenge.git
+    git clone git@github.com:gbrayhan/laravel-php-8.git
 
 Switch to the repo folder
 
-    cd bp-challenge
+    cd laravel-php-8
 
 Install all the dependencies using composer
 
@@ -48,8 +48,8 @@ You can now access the server at http://localhost:8000
 
 **TL;DR command list**
 
-    git clone git@github.com:gbrayhan/bp-challenge.git
-    cd laravel-realworld-example-app
+    git clone git@github.com:gbrayhan/laravel-php-8.git
+    cd laravel-php-8
     composer install
     cp .env.example .env
     php artisan key:generate
@@ -66,8 +66,8 @@ You can now access the server at http://localhost:8000
 To install with [Docker](https://www.docker.com), run following commands:
 
 ```
-git clone git@github.com:gbrayhan/bp-challenge.git
-cd bp-challenge
+git clone git@github.com:gbrayhan/laravel-php-8.git
+cd laravel-php-8
 cp .env.example .env
 docker-compose up -d
 docker exec php_app php artisan key:generate
